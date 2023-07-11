@@ -1,0 +1,41 @@
+{% extends 'base_inicio.html' %}
+
+{% block customCSS %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/iniciar.css')}}">
+{% endblock %}
+ 
+
+{% block content %}
+
+<div class="container">
+    
+    <div class="mt-3">
+        <h1>Registro</h1>
+    </div>
+    
+    <div class="mt-3">
+        <img src="{{url_for('static', filename='img/docplant.png')}}" style="height: 200px;">
+    </div>
+<form class="form-login" action="/registro" method="post">
+    
+
+    <div class="form-floating">
+        <input type="email" class="form-control" name="email"placeholder="name@example.com">
+        <label >Email</label>
+    </div>
+    <div class="form-floating mt-2">
+        <input type="password" class="form-control" name="password" placeholder="Password">
+        <label>contraseña</label>
+    </div>
+
+    <button class="w-100 btn btn-lg btn-primary" style="background-color: #13CE66; color:#FFFFFF" type="submit">Registrar</button>
+
+    <div class="form-floating mt-4">
+    <a href="/login">iniciar</a>
+    </div>
+</form>
+
+</div>
+
+{% endblock %}
+

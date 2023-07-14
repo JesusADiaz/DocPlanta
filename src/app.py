@@ -37,9 +37,8 @@ def register1():
     return render_template('auth/home.html')
 
 
-@app.route('/registro', methods=['GET', 'POST'])
-@app.route('/registro')
 
+@app.route('/registro', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         email = request.form['email']
@@ -53,6 +52,11 @@ def register():
 
 @app.route('/plantas', methods=['GET', 'POST'])
 def plantas():
+    plants_data = [] 
+     # Fetch plants data from the database
+    cur = db.connection.cursor()
+    cur.execute('SELECT * FROM plantas')
+    plants_data = cur.fetchall()
     if request.method == 'POST':
         nombre_planta = request.form['nombre_planta']
         descripcion_planta = request.form['descripcion_planta']
@@ -60,8 +64,38 @@ def plantas():
         cur.execute('INSERT INTO plantas (nombre_planta, descripcion_planta) VALUES (%s, %s)', (nombre_planta, descripcion_planta))
         db.connection.commit()
         flash("añadido")
-    return render_template('auth/plantas.html' )
+    return render_template('auth/plantas.html', plants_data=plants_data)
 
+
+
+@app.route('/plantas/delete/<int:id>', methods=['POST'])
+def delete_plant(id):
+    cur = db.connection.cursor()
+    cur.execute('DELETE FROM plantas WHERE id = %s', (id,))
+    db.connection.commit()
+    flash("Plant deleted")
+    return redirect('/plantas')
+
+
+
+
+@app.route('/plantas/update/<int:id>', methods=['GET', 'POST'])
+def update_plant(id):
+    if request.method == 'POST':
+        nombre_planta = request.form.get('nombre_planta')
+        descripcion_planta = request.form.get('descripcion_planta')
+        cur = db.connection.cursor()
+        cur.execute('UPDATE plantas SET nombre_planta = %s, descripcion_planta = %s WHERE id = %s',
+                    (nombre_planta, descripcion_planta, id))
+        db.connection.commit()
+        cur.close()
+        return redirect('/plantas')  
+    else:
+        cur = db.connection.cursor()
+        cur.execute('SELECT * FROM plantas WHERE id = %s', (id,))
+        plant_data = cur.fetchone()
+        cur.close()
+        return render_template('auth/actualizar_plantas.html', plant_data=plant_data)
     
 
 @app.route('/enfermedades')

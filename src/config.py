@@ -8,7 +8,6 @@ class DevelopmentConfig(Config):
     MYSQL_PASSWORD = ''
     MYSQL_DB = 'docplanta' 
 
-
 config={
     'development':DevelopmentConfig
 }
